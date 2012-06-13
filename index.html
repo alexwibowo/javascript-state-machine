@@ -16,7 +16,7 @@
       <button id="clear" onclick="Demo.clear();">clear</button>
       <button id="calm"  onclick="Demo.calm();">calm</button>
       <button id="warn"  onclick="Demo.warn();">warn</button>
-      <button id="panic" onclick="Demo.panic();">panic!</button>
+      <button id="panic" onclick="panic();">panic!</button>
     </div>
 
     <div id="diagram">
@@ -34,6 +34,16 @@
 
   <script src="state-machine.js"></script>
   <script src="demo/demo.js"></script>
+
+  <script type="text/javascript">
+      function panic(){
+          try{
+            Demo.panic();
+          }catch(e){
+              alert(e);
+          }
+      }
+  </script>
 
 </body> 
 </html>

@@ -1,3 +1,27 @@
+Version 2.2.1 (forked from 2.2.0)
+--------------------------
+* All event handlers are renamed for clarity:
+  - onBefore<event name> instead of  onbefore<event name>
+  - onAfter<event name> instead of onafter<event name>
+  - onLeave<state name> instead of onleave<state name>
+  - onEnter<state name> instead of onenter<state name>
+  - onChangeState instead of onchangestate
+
+  e.g.:
+  - onBeforePanic
+  - onAfterPanic
+  - onLeaveGreen
+  - onEnterGreen
+
+  where 'Panic' is a capitalized event name 'panic' (you can register the event as 'panic', I will take care of the capitalization)
+
+* Introducing the concept of 'maximum re entrance'. An event that is triggered in a particular state might not cause any
+  event transition. In this situation, the 'onBefore' event handler will still be executed. Sometimes you might want to limit
+  the number of times this 're entrance' should occur. This is now configurable through the 'maximumReentrance' configuration
+  in 'stateConfiguration'. See demo.js for an example.
+
+
+
 Version 2.2.0 (unreleased)
 --------------------------
 

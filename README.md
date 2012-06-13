@@ -1,25 +1,22 @@
-Javascript Finite State Machine (v2.2.0)
+Javascript Finite State Machine (v2.2.1)
 ========================================
+forked from https://github.com/jakesgordon/javascript-state-machine
 
 This standalone javascript micro-framework provides a finite state machine for your pleasure.
 
- * You can find the [code here](https://github.com/jakesgordon/javascript-state-machine)
- * You can find a [description here](http://codeincomplete.com/posts/2012/1/7/javascript_state_machine_v2_1_0/)
- * You can find a [working demo here](http://codeincomplete.com/posts/2011/8/19/javascript_state_machine_v2/example/)
+ * You can find the [code here](https://github.com/alexwibowo/javascript-state-machine)
 
 Download
 ========
 
-You can download [state-machine.js](https://github.com/jakesgordon/javascript-state-machine/raw/master/state-machine.js),
-or the [minified version](https://github.com/jakesgordon/javascript-state-machine/raw/master/state-machine.min.js)
+You can download [state-machine.js](https://github.com/alexwibowo/javascript-state-machine/raw/master/state-machine.js),
 
 Alternatively:
 
-    git clone git@github.com:jakesgordon/javascript-state-machine
+    git clone git@github.com:alexwibowo/javascript-state-machine
 
 
  * All code is in state-machine.js
- * Minified version provided in state-machine.min.js
  * No 3rd party library is required
  * Demo can be found in /index.html
  * QUnit tests can be found in /test/index.html
@@ -27,7 +24,7 @@ Alternatively:
 Usage
 =====
 
-Include `state-machine.min.js` in your application.
+Include `state-machine.js` in your application.
 
 In its simplest form, create a standalone state machine using:
 
@@ -91,23 +88,23 @@ Callbacks
 
 4 callbacks are available if your state machine has methods using the following naming conventions:
 
- * onbefore**event** - fired before the event
- * onleave**state**  - fired when leaving the old state
- * onenter**state**  - fired when entering the new state
- * onafter**event**  - fired after the event
+ * onBefore**Event** - fired before the event
+ * onLeave**State**  - fired when leaving the old state
+ * onEnter**State**  - fired when entering the new state
+ * onAfter**Event**  - fired after the event
 
 You can affect the event in 3 ways:
 
- * return `false` from an `onbeforeevent` handler to cancel the event.
- * return `false` from an `onleavestate` handler to cancel the event.
- * return `ASYNC` from an `onleavestate` handler to perform an asynchronous state transition (see next section)
+ * return `false` from an `onBeforeEvent` handler to cancel the event.
+ * return `false` from an `onLeaveState` handler to cancel the event.
+ * return `ASYNC` from an `onLeaveState` handler to perform an asynchronous state transition (see next section)
 
 For convenience, the 2 most useful callbacks can be shortened:
 
- * on**event** - convenience shorthand for onafter**event**
- * on**state** - convenience shorthand for onenter**state**
+ * on**Event** - convenience shorthand for onAfter**Event**
+ * on**State** - convenience shorthand for onEnter**State**
 
-In addition, a generic `onchangestate()` callback can be used to call a single function for _all_ state changes:
+In addition, a generic `onChangeState()` callback can be used to call a single function for _all_ state changes:
 
 All callbacks will be passed the same arguments:
 
@@ -127,11 +124,11 @@ Callbacks can be specified when the state machine is first created:
         { name: 'clear', from: 'yellow', to: 'green'  }
       ],
       callbacks: {
-        onpanic:  function(event, from, to, msg) { alert('panic! ' + msg);               },
-        onclear:  function(event, from, to, msg) { alert('thanks to ' + msg);            },
-        ongreen:  function(event, from, to)      { document.body.className = 'green';    },
-        onyellow: function(event, from, to)      { document.body.className = 'yellow';   },
-        onred:    function(event, from, to)      { document.body.className = 'red';      },
+        onPanic:  function(event, from, to, msg) { alert('panic! ' + msg);               },
+        onClear:  function(event, from, to, msg) { alert('thanks to ' + msg);            },
+        onGreen:  function(event, from, to)      { document.body.className = 'green';    },
+        onYellow: function(event, from, to)      { document.body.className = 'yellow';   },
+        onRed:    function(event, from, to)      { document.body.className = 'red';      },
       }
     });
 
@@ -141,10 +138,10 @@ Callbacks can be specified when the state machine is first created:
 
 Additionally, they can be added and removed from the state machine at any time:
 
-    fsm.ongreen       = null;
-    fsm.onyellow      = null;
-    fsm.onred         = null;
-    fsm.onchangestate = function(event, from, to) { document.body.className = to; };
+    fsm.onGreen       = null;
+    fsm.onYellow      = null;
+    fsm.onRed         = null;
+    fsm.onChangeState = function(event, from, to) { document.body.className = to; };
 
 Asynchronous State Transitions
 ==============================
@@ -173,17 +170,17 @@ For example, using jQuery effects:
 
       callbacks: {
 
-        onentermenu: function() { $('#menu').show(); },
-        onentergame: function() { $('#game').show(); },
+        onEnterMenu: function() { $('#menu').show(); },
+        onEnterGame: function() { $('#game').show(); },
 
-        onleavemenu: function() {
+        onLeaveMenu: function() {
           $('#menu').fadeOut('fast', function() {
             fsm.transition();
           });
           return StateMachine.ASYNC; // tell StateMachine to defer next state until we call transition (in fadeOut callback above)
         },
 
-        onleavegame: function() {
+        onLeaveGame: function() {
           $('#game').slideDown('slow', function() {
             fsm.transition();
           };
@@ -209,8 +206,8 @@ instances:
 
     MyFSM.prototype = {
 
-      onpanic: function(event, from, to) { alert('panic');        },
-      onclear: function(event, from, to) { alert('all is clear'); },
+      onPanic: function(event, from, to) { alert('panic');        },
+      onClear: function(event, from, to) { alert('all is clear'); },
 
       // my other prototype methods
 
@@ -296,6 +293,28 @@ So you have a number of choices available to you when initializing your state ma
    that each instance gets its own unique `current` state, rather than an (unwanted) shared
    `current` state on the prototype object itself._
 
+Handling Reentrance
+======================
+An event that is triggered in a particular state might not cause any event transition. In this situation, the 'onBefore' callback
+will still be executed. Sometimes you might want to limit the number of times this 're entrance' should occur.
+This can be configured as follows:
+
+   var fsm = StateMachine.create({
+
+
+      events: [
+              { name: 'panic', from: 'green', to: 'red'   },
+              { name: 'panic', from: 'red',    to: 'red'    },  // re-entrance
+              { name: 'calm',  from: 'red',   to: 'green' },
+      ],
+
+      stateConfiguration:{
+              red: {maximumReentrance: 5}
+      }
+   });
+
+in the example above, an exception will be thrown when 'panic' was issued more than 5 times.
+
 Handling Failures
 ======================
 
@@ -328,8 +347,7 @@ Contact
 =======
 
 If you have any ideas, feedback, requests or bug reports, you can reach me at
-[jake@codeincomplete.com](mailto:jake@codeincomplete.com), or via
-my website: [Code inComplete](http://codeincomplete.com/)
+[alexwibowo@gmail.com](mailto:alexwibowo@gmail.com), or via
 
 
 

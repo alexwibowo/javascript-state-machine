@@ -2,85 +2,85 @@
 
 module("special initialization options", {
 
-  setup: function() {
-    this.called = [];
-    this.onchangestate   = function(event,from,to) { this.called.push('onchange from ' + from + ' to ' + to); };
-    this.onbeforeinit    = function()              { this.called.push("onbeforeinit");                        };
-    this.onafterinit     = function()              { this.called.push("onafterinit");                         };
-    this.onbeforestartup = function()              { this.called.push("onbeforestartup");                     };
-    this.onafterstartup  = function()              { this.called.push("onafterstartup");                      };
-    this.onbeforepanic   = function()              { this.called.push("onbeforepanic");                       };
-    this.onafterpanic    = function()              { this.called.push("onafterpanic");                        };
-    this.onbeforecalm    = function()              { this.called.push("onbeforecalm");                        };
-    this.onaftercalm     = function()              { this.called.push("onaftercalm");                         };
-    this.onenternone     = function()              { this.called.push("onenternone");                         };
-    this.onentergreen    = function()              { this.called.push("onentergreen");                        };
-    this.onenterred      = function()              { this.called.push("onenterred");                          };
-    this.onleavenone     = function()              { this.called.push("onleavenone");                         };
-    this.onleavegreen    = function()              { this.called.push("onleavegreen");                        };
-    this.onleavered      = function()              { this.called.push("onleavered");                          };
-  }
+    setup: function() {
+        this.called = [];
+        this.onChangeState   = function(event,from,to) { this.called.push('onchange from ' + from + ' to ' + to); };
+        this.onBeforeInit    = function()              { this.called.push("onBeforeInit");                        };
+        this.onAfterInit     = function()              { this.called.push("onAfterInit");                         };
+        this.onBeforeStartup = function()              { this.called.push("onBeforeStartup");                     };
+        this.onAfterStartup  = function()              { this.called.push("onAfterStartup");                      };
+        this.onBeforePanic   = function()              { this.called.push("onBeforePanic");                       };
+        this.onAfterPanic    = function()              { this.called.push("onAfterPanic");                        };
+        this.onBeforeCalm    = function()              { this.called.push("onBeforeCalm");                        };
+        this.onAfterCalm     = function()              { this.called.push("onAfterCalm");                         };
+        this.onEnterNone     = function()              { this.called.push("onEnterNone");                         };
+        this.onEnterGreen    = function()              { this.called.push("onEnterGreen");                        };
+        this.onEnterRed      = function()              { this.called.push("onEnterRed");                          };
+        this.onLeaveNone     = function()              { this.called.push("onLeaveNone");                         };
+        this.onLeaveGreen    = function()              { this.called.push("onLeaveGreen");                        };
+        this.onLeaveRed      = function()              { this.called.push("onLeaveRed");                          };
+    }
 
 });
 
 //-----------------------------------------------------------------------------
 
 test("initial state defaults to 'none'", function() {
-  StateMachine.create({
-    target: this,
-    events: [
-      { name: 'panic', from: 'green', to: 'red'   },
-      { name: 'calm',  from: 'red',   to: 'green' }
-  ]});
-  equal(this.current, 'none');
-  deepEqual(this.called,  []);
+    StateMachine.create({
+        target: this,
+        events: [
+            { name: 'panic', from: 'green', to: 'red'   },
+            { name: 'calm',  from: 'red',   to: 'green' }
+        ]});
+    equal(this.current, 'none');
+    deepEqual(this.called,  []);
 });
 
 //-----------------------------------------------------------------------------
 
 test("initial state can be specified", function() {
-  StateMachine.create({
-    target: this,
-    initial: 'green',
-    events: [
-      { name: 'panic', from: 'green', to: 'red'   },
-      { name: 'calm',  from: 'red',   to: 'green' }
-  ]});
-  equal(this.current, 'green');
-  deepEqual(this.called, ["onbeforestartup", "onleavenone", "onentergreen", "onchange from none to green", "onafterstartup"]);
+    StateMachine.create({
+        target: this,
+        initial: 'green',
+        events: [
+            { name: 'panic', from: 'green', to: 'red'   },
+            { name: 'calm',  from: 'red',   to: 'green' }
+        ]});
+    equal(this.current, 'green');
+    deepEqual(this.called, ["onBeforeStartup", "onLeaveNone", "onEnterGreen", "onchange from none to green", "onAfterStartup"]);
 });
 
 //-----------------------------------------------------------------------------
 
 test("startup event name can be specified", function() {
-  StateMachine.create({
-    target: this,
-    initial: { state: 'green', event: 'init' },
-    events: [
-      { name: 'panic', from: 'green', to: 'red'   },
-      { name: 'calm',  from: 'red',   to: 'green' }
-  ]});
-  equal(this.current, 'green');
-  deepEqual(this.called, ["onbeforeinit", "onleavenone", "onentergreen", "onchange from none to green", "onafterinit"]);
+    StateMachine.create({
+        target: this,
+        initial: { state: 'green', event: 'init' },
+        events: [
+            { name: 'panic', from: 'green', to: 'red'   },
+            { name: 'calm',  from: 'red',   to: 'green' }
+        ]});
+    equal(this.current, 'green');
+    deepEqual(this.called, ["onBeforeInit", "onLeaveNone", "onEnterGreen", "onchange from none to green", "onAfterInit"]);
 });
 
 //-----------------------------------------------------------------------------
 
 test("startup event can be deferred", function() {
-  StateMachine.create({
-    target: this,
-    initial: { state: 'green', event: 'init', defer: true },
-    events: [
-      { name: 'panic', from: 'green', to: 'red'   },
-      { name: 'calm',  from: 'red',   to: 'green' }
-  ]});
-  equal(this.current, 'none');
-  deepEqual(this.called, []);
+    StateMachine.create({
+        target: this,
+        initial: { state: 'green', event: 'init', defer: true },
+        events: [
+            { name: 'panic', from: 'green', to: 'red'   },
+            { name: 'calm',  from: 'red',   to: 'green' }
+        ]});
+    equal(this.current, 'none');
+    deepEqual(this.called, []);
 
-  this.init();
+    this.init();
 
-  equal(this.current, 'green');
-  deepEqual(this.called, ["onbeforeinit", "onleavenone", "onentergreen", "onchange from none to green", "onafterinit"]);
+    equal(this.current, 'green');
+    deepEqual(this.called, ["onBeforeInit", "onLeaveNone", "onEnterGreen", "onchange from none to green", "onAfterInit"]);
 });
 
 //-----------------------------------------------------------------------------
