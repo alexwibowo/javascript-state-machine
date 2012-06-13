@@ -347,8 +347,7 @@ Contact
 =======
 
 If you have any ideas, feedback, requests or bug reports, you can reach me at
-[alexwibowo@gmail.com](mailto:alexwibowo@gmail.com), or via
-
+[alexwibowo@gmail.com](mailto:alexwibowo@gmail.com)
 
 
 
